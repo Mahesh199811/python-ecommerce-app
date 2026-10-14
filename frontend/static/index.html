@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stride</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">ST</span>
+      <div>
+        <p class="eyebrow">Shoe store</p>
+        <h1>Stride</h1>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <button type="button" class="nav-btn active" data-view="shop">Shop</button>
+      <button type="button" class="nav-btn" data-view="orders">Orders</button>
+      <button type="button" class="nav-btn" data-view="customers">Customers</button>
+    </nav>
+    <div class="top-actions">
+      <div id="service-status" class="service-status" aria-live="polite"></div>
+      <button type="button" id="refresh" class="ghost">Refresh</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-shop">
+      <div class="layout">
+        <div>
+          <div class="section-head">
+            <h2>Shoes</h2>
+            <p>Running, court, trail, and everyday pairs from Nike, Adidas, Puma, New Balance, and more.</p>
+          </div>
+          <div class="toolbar">
+            <div id="brand-filters" class="filters" aria-label="Filter by brand"></div>
+            <label class="filter">Category
+              <select id="category-filter">
+                <option value="">All categories</option>
+                <option value="running">Running</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="court">Court</option>
+                <option value="trail">Trail</option>
+              </select>
+            </label>
+          </div>
+          <form id="product-form" class="panel form-grid">
+            <h3 id="product-form-title">Add a shoe</h3>
+            <input type="hidden" id="product-id">
+            <div class="split">
+              <label>Brand
+                <input id="product-brand" list="brand-list" required maxlength="80" autocomplete="off">
+              </label>
+              <label>Model
+                <input id="product-name" required maxlength="160" autocomplete="off">
+              </label>
+            </div>
+            <datalist id="brand-list"></datalist>
+            <label>Description
+              <textarea id="product-description" maxlength="1000" rows="2"></textarea>
+            </label>
+            <div class="split">
+              <label>Category
+                <select id="product-category" required>
+                  <option value="running">Running</option>
+                  <option value="lifestyle">Lifestyle</option>
+                  <option value="court">Court</option>
+                  <option value="trail">Trail</option>
+                </select>
+              </label>
+              <label>US size
+                <input id="product-size" required maxlength="16" placeholder="10">
+              </label>
+              <label>Color
+                <input id="product-color" required maxlength="40" placeholder="Black">
+              </label>
+            </div>
+            <div class="split">
+              <label>Price
+                <input id="product-price" type="number" min="0" step="0.01" required>
+              </label>
+              <label>Stock
+                <input id="product-stock" type="number" min="0" step="1" required>
+              </label>
+            </div>
+            <div class="form-actions">
+              <button type="submit" id="product-submit">Add shoe</button>
+              <button type="button" id="product-cancel" class="ghost" hidden>Cancel</button>
+            </div>
+          </form>
+          <div id="product-list" class="grid"></div>
+        </div>
+        <aside class="panel cart">
+          <h2>Your pair</h2>
+          <label>Customer
+            <select id="customer-select">
+              <option value="">Choose a customer</option>
+            </select>
+          </label>
+          <div id="cart-lines"></div>
+          <p class="total"><span>Total</span> <strong id="cart-total">$0.00</strong></p>
+          <button type="button" id="place-order" disabled>Place order</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-orders" hidden>
+      <div class="section-head">
+        <h2>Orders</h2>
+        <p>Placing an order reserves the pair. Cancelling it puts the pair back in stock.</p>
+      </div>
+      <label class="filter">Customer
+        <select id="order-filter">
+          <option value="">All customers</option>
+        </select>
+      </label>
+      <div id="order-list" class="stack"></div>
+    </section>
+
+    <section id="view-customers" hidden>
+      <div class="section-head">
+        <h2>Customers</h2>
+        <p>Shoppers who can check out a pair.</p>
+      </div>
+      <form id="user-form" class="panel form-grid narrow">
+        <h3 id="user-form-title">Add a customer</h3>
+        <input type="hidden" id="user-id">
+        <label>Name
+          <input id="user-name" required maxlength="120" autocomplete="name">
+        </label>
+        <label>Email
+          <input id="user-email" type="email" required maxlength="254" autocomplete="email">
+        </label>
+        <div class="form-actions">
+          <button type="submit" id="user-submit">Add customer</button>
+          <button type="button" id="user-cancel" class="ghost" hidden>Cancel</button>
+        </div>
+      </form>
+      <div id="user-list" class="stack"></div>
+    </section>
+  </main>
+
+  <p id="toast" class="toast" role="status"></p>
+  <script src="/static/app.js"></script>
+</body>
+</html>
