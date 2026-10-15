@@ -31,6 +31,10 @@ Stop everything with:
 
 Each service stores its own SQLite file under `data/`. Logs are written to `logs/`.
 
+## Docker
+
+Images are defined under `docker/`. Build from the repository root and run the four containers on one network. See [docs/docker-project.md](docs/docker-project.md).
+
 ## Example
 
 ```bash
