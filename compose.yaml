@@ -1,0 +1,86 @@
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: docker/user-service/Dockerfile
+    image: ecommerce-user-service:1.0
+    ports:
+      - "5001:5001"
+    volumes:
+      - user-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5001/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  product-service:
+    build:
+      context: .
+      dockerfile: docker/product-service/Dockerfile
+    image: ecommerce-product-service:1.0
+    ports:
+      - "5002:5002"
+    volumes:
+      - product-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5002/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  order-service:
+    build:
+      context: .
+      dockerfile: docker/order-service/Dockerfile
+    image: ecommerce-order-service:1.0
+    ports:
+      - "5003:5003"
+    environment:
+      USER_SERVICE_URL: http://user-service:5001
+      PRODUCT_SERVICE_URL: http://product-service:5002
+    volumes:
+      - order-data:/app/data
+    depends_on:
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5003/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    image: ecommerce-frontend:1.0
+    ports:
+      - "5004:5004"
+    environment:
+      USER_SERVICE_URL: http://user-service:5001
+      PRODUCT_SERVICE_URL: http://product-service:5002
+      ORDER_SERVICE_URL: http://order-service:5003
+    depends_on:
+      user-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      order-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5004/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  user-data:
+  product-data:
+  order-data:
